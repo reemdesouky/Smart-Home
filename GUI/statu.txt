@@ -1,0 +1,2 @@
+# Temp : 30 c 
+# PIR : off 

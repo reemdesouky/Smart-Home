@@ -1,0 +1,4 @@
+- "Menan" entered the house
+- Password has been changed !
+- Someone entered wrong password
+
