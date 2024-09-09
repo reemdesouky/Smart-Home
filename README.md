@@ -3,7 +3,7 @@ This is the final project for the Mind Cloud Electrical Training.
 
 Meet the team:
 
-  - Software Team
+  - Software Team:
   
       Reem Ibrahim Desouky
     
