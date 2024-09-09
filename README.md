@@ -12,7 +12,7 @@ Meet the team:
       Omar Ahmed Abbas
     
   - Hardware Team:
-  - 
+   
       Zeyad Mahmoud Abdalrahman
     
       Yehia Mahmoud Abdelazim
