@@ -34,7 +34,7 @@ Keypad mKeypad = Keypad(makeKeymap(keyMap), rowPins, colPins, NUMrows, NUMcols);
 //variables for sensor readings
 int LDRread = 0;
 int PIRread;
-float celsius;
+//float celsius;
 
 //variables for password and commands
 int authenticated = 0;
@@ -42,6 +42,14 @@ char key;
 String inputPassword = "";
 char lastCommand = '0';
 bool commandReceived = false; //flag for receiving commands from the CV code
+
+//variables for the NTC module
+int Vo;
+float R1 = 10000;
+float logR2, R2, T;
+float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
+
+
 
 void setup()
 {
@@ -178,18 +186,23 @@ void manageSensors()
     }
 
     //temperature and fan management
-    celsius = analogRead(tempPin) * (5.0 / 1023.0);
-    celsius = (celsius - 0.5) * 100;
-    if (celsius < 20)
+  Vo = analogRead(tempPin);
+  R2 = R1 * (1023.0 / (float)Vo - 1.0);
+  logR2 = log(R2);
+  T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
+  T = T - 273.15;
+  T = (T * 9.0)/ 5.0 + 32.0;
+
+    if (T < 20)
     {
         analogWrite(enablePin, 0); //turn off fan
         analogWrite(RGBblue, 255); //blue light on
         analogWrite(RGBred, 0);
         analogWrite(RGBgreen, 0);
     }
-    else if (celsius >= 20 && celsius <= 30)
+    else if (T >= 20 && T <= 30)
     {
-        int speed = map(celsius, 20, 30, 0, 255);
+        int speed = map(T, 20, 30, 0, 255);
         analogWrite(enablePin, speed); //adjust fan speed
         analogWrite(RGBgreen, 255); //green light on
         analogWrite(RGBblue, 0);
@@ -213,6 +226,8 @@ void manageSensors()
 }
 
 //function to open the door
+
+
 void openDoor()
 {
     servo.write(90);  //open door
@@ -220,6 +235,7 @@ void openDoor()
     servo.write(0);   //close door
     Serial.println("Door is open.");
 }
+
 
 //function to disable all the sensors
 void disableSensors()
@@ -237,10 +253,14 @@ void disableSensors()
 void sensorsReadings()
 {
     int ldr = analogRead(LDRPin);
-    celsius = analogRead(tempPin) * (5.0 / 1023.0);
-    celsius = (celsius - 0.5) * 100;
+    Vo = analogRead(tempPin);
+    R2 = R1 * (1023.0 / (float)Vo - 1.0);
+    logR2 = log(R2);
+    T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
+    T = T - 273.15;
+    T = (T * 9.0)/ 5.0 + 32.0;
     int pir = digitalRead(PIRPin);
-    String data = "LDR:" + String(ldr) + ",Temp:" + String(celsius) + ",PIR:" + String(pir);
+    String data = "LDR:" + String(ldr) + ",Temp:" + String(T) + ",PIR:" + String(pir);
     //create and send formatted sensor data to be displayed on the GUI
 
     Serial.println(data);
