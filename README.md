@@ -17,3 +17,5 @@ Meet the team:
     
       Yehia Mahmoud Abdelazim
     
+    
+Technical Report can be accessed through this link: https://drive.google.com/file/d/15-8arEIjST5i4WEB41900yJaaS4Gxqxa/view?usp=sharing
